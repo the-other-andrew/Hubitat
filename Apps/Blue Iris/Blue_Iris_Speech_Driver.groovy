@@ -48,12 +48,22 @@ def initialize() {
 }
 
 def speak(message) {
+    handle(message)
+}
+
+def deviceNotification(message) {
+    handle(message)
+}
+
+def handle(message) {
     def command
     switch (message) {
         case ~/^[~1234567]$/:
+            log.info "Setting Blue Iris profile \"${message}\"."
             command = "http://${biHost}:${biPort}/admin?profile=${message}&user=${biUser}&pw=${biPass}"
-            break;
+            break
         default:
+            log.info "Setting Blue Iris schedule \"${message}\"."
             command = "http://${biHost}:${biPort}/admin?schedule=${message}&user=${biUser}&pw=${biPass}"
     }
     httpGet(uri: command){response ->
