@@ -1,10 +1,10 @@
 /**
  *
- *   File: Blue_Iris_Speech_Driver.groovy
+ *   File: Virtual_Contact_Sensor_Switch_Driver.groovy
  *   Platform: Hubitat
  *   Modification History:
  *       Date       Who               What
- *       2018-12-29 the-other-andrew  Speech driver for Profile control of Blue Iris
+ *       2019-01-24 the-other-andrew  Virtual Switch that can show as a contact sensor
  *
  *  Copyright 2019 Andrew Barkley
  *
@@ -31,9 +31,11 @@ metadata {
 }
 
 def on() {
-
+    sendEvent(name: "switch", value: "on")
+    sendEvent(name: "contact", value: "open")
 }
 
 def off() {
-
+    sendEvent(name: "switch", value: "off")
+    sendEvent(name: "contact", value: "closed")
 }
