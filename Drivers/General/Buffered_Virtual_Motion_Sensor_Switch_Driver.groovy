@@ -39,19 +39,16 @@ def time() {
 def on() {
     log.info "Push"
     long current = time()
-    log.info "current $current"
-    log.info "last $state.last"
     if (state.last != null && state.last > 0) {
         long delay = current - state.last
         long seconds = delay / 1000
-
         if (seconds < window) {
-            sendEvent(name: "switch", value: "on")
             sendEvent(name: "motion", value: "active")
-            runIn(duration, off)
         }
     }
-    state.last = current;
+    sendEvent(name: "switch", value: "on")
+    runIn(duration, off)
+    state.last = current
 }
 
 def off() {
