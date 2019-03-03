@@ -21,7 +21,7 @@
 def version() {"v1.0.20190302"}
 
 preferences {
-    input("duration", "number", title: "Duration", description: "The duration that motion will be reported")
+    input("duration", "number", title: "Duration", description: "The duration that motion will be reported", required: true, defaultValue: 1)
 }
 
 metadata {
@@ -29,6 +29,10 @@ metadata {
         capability "Switch"
         capability "MotionSensor"
     }
+}
+
+def initialize() {
+    off()
 }
 
 def on() {

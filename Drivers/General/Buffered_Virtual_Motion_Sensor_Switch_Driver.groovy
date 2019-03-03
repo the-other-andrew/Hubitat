@@ -21,8 +21,8 @@
 def version() {"v1.0.20190302"}
 
 preferences {
-    input("window", "number", title: "Window", description: "The maximum time in seconds between push events before motion is detected")
-    input("duration", "number", title: "Duration", description: "The duration that motion will be reported")
+    input("window", "number", title: "Window", description: "The maximum time in seconds between push events before motion is detected", required: true, defaultValue: 60)
+    input("duration", "number", title: "Duration", description: "The duration that motion will be reported", required: true, defaultValue: 1)
 }
 
 metadata {
@@ -32,23 +32,32 @@ metadata {
     }
 }
 
+def initialize() {
+    off()
+}
+
 def time() {
     return new GregorianCalendar().time.time
 }
 
 def on() {
-    log.info "Push"
+    log.info "On"
+    sendEvent(name: "switch", value: "on")
+
+    // capture motion, if any
     long current = time()
     if (state.last != null && state.last > 0) {
         long delay = current - state.last
         long seconds = delay / 1000
         if (seconds < window) {
+            log.info "Second event, motion detected"
             sendEvent(name: "motion", value: "active")
+        } else {
+            log.info "First event"
         }
     }
-    sendEvent(name: "switch", value: "on")
-    runIn(duration, off)
     state.last = current
+    runIn(duration, off)
 }
 
 def off() {
