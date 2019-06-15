@@ -1,3 +1,5 @@
+import java.util.regex.Matcher
+
 /**
  *
  *   File: Blue_Iris_Speech_Driver.groovy
@@ -58,6 +60,21 @@ def deviceNotification(message) {
 def handle(message) {
     def command
     switch (message) {
+        case ~/^trigger[ ]+(.+)$/:
+            def cam = Matcher.lastMatcher[0][1]
+            log.info "Triggering Blue Iris camera \"${cam}\"."
+            command = "http://${biHost}:${biPort}/admin?trigger&camera=${cam}&user=${biUser}&pw=${biPass}"
+            break
+        case ~/^schedule[ ]+(.+)$/:
+            def schedule = Matcher.lastMatcher[0][1]
+            log.info "Setting Blue Iris schedule \"${schedule}\"."
+            command = "http://${biHost}:${biPort}/admin?schedule=${schedule}&user=${biUser}&pw=${biPass}"
+            break
+        case ~/^profile[ ]+(.+)$/:
+            def profile = Matcher.lastMatcher[0][1]
+            log.info "Setting Blue Iris profile \"${profile}\"."
+            command = "http://${biHost}:${biPort}/admin?profile=${profile}&user=${biUser}&pw=${biPass}"
+            break
         case ~/^[~1234567]$/:
             log.info "Setting Blue Iris profile \"${message}\"."
             command = "http://${biHost}:${biPort}/admin?profile=${message}&user=${biUser}&pw=${biPass}"
